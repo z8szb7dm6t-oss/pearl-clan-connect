@@ -1,248 +1,205 @@
-import { createFileRoute } from "@tanstack/react-router";
-import {
-  ArrowDown,
-  BadgeCheck,
-  Castle,
-  ChevronRight,
-  Crown,
-  ExternalLink,
-  Flame,
-  Globe2,
-  HeartHandshake,
-  Languages,
-  Medal,
-  MessageCircle,
-  Maximize2,
-  Send,
-  Shield,
-  Sparkles,
-  Star,
-  Swords,
-  Trophy,
-  Users,
-} from "lucide-react";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap");
 
-import clanInfo from "@/assets/clan-info-current.png.asset.json";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { CLAN_JOIN_URL, CLAN_TAG, LEADER_HANDLE, LEADER_TELEGRAM_URL, MIN_TOWN_HALL } from "@/lib/clan";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "PEARL STAR — клан Clash of Clans" },
-      {
-        name: "description",
-        content: "Вступай в PEARL STAR: активный русскоязычный клан Clash of Clans, набор от ТХ10.",
-      },
-      { property: "og:title", content: "PEARL STAR — клан Clash of Clans" },
-      {
-        property: "og:description",
-        content: "КВ нон-стоп, ЛКВ, рейды столицы и активный набор от ТХ10.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: Index,
-});
+:root {
+  --background: oklch(0.09 0.018 85);
+  --foreground: oklch(0.95 0.025 88);
 
-const offers = [
-  { icon: Swords, title: "КВ нон-стоп", text: "Клановые войны без перерывов" },
-  { icon: Trophy, title: "Активные ЛКВ", text: "Играем в Лиге Клановых Войн" },
-  { icon: HeartHandshake, title: "Донат", text: "Быстрый и качественный донат войск" },
-  { icon: Castle, title: "Рейды столицы", text: "Регулярные атаки каждые выходные" },
-  { icon: Users, title: "Хороший коллектив", text: "Дружная и активная команда" },
-  { icon: BadgeCheck, title: "Поддержка", text: "Помогаем новичкам и опытным" },
-];
+  --card: oklch(0.145 0.025 85);
+  --card-foreground: oklch(0.95 0.025 88);
 
-const expectations = [
-  { icon: Castle, title: `ТХ${MIN_TOWN_HALL}+`, text: `Ратуша ${MIN_TOWN_HALL} уровня или выше` },
-  { icon: Swords, title: "Все атаки в КВ", text: "Обязательно используй все атаки" },
-  { icon: Flame, title: "Участие в рейдах", text: "Атакуй столицу каждые выходные" },
-  { icon: MessageCircle, title: "Активность в чате", text: "Общайся с соклановцами" },
-];
+  --popover: oklch(0.145 0.025 85);
+  --popover-foreground: oklch(0.95 0.025 88);
 
-function JoinButton({ label = "Вступить в клан" }: { label?: string }) {
-  return (
-    <Button asChild variant="hero" size="hero">
-      <a href={CLAN_JOIN_URL} target="_blank" rel="noreferrer">
-        <Crown aria-hidden="true" />
-        {label}
-        <ExternalLink aria-hidden="true" />
-      </a>
-    </Button>
-  );
+  --primary: oklch(0.76 0.16 82);
+  --primary-foreground: oklch(0.12 0.02 85);
+
+  --secondary: oklch(0.20 0.035 85);
+  --secondary-foreground: oklch(0.95 0.025 88);
+
+  --muted: oklch(0.17 0.025 85);
+  --muted-foreground: oklch(0.68 0.025 88);
+
+  --accent: oklch(0.24 0.05 85);
+  --accent-foreground: oklch(0.95 0.025 88);
+
+  --destructive: oklch(0.62 0.20 25);
+  --destructive-foreground: oklch(0.98 0 0);
+
+  --border: oklch(0.76 0.16 82 / 22%);
+  --input: oklch(0.76 0.16 82 / 25%);
+  --ring: oklch(0.76 0.16 82);
+
+  --radius: 0.75rem;
+
+  --panel: oklch(0.145 0.025 85 / 90%);
+  --panel-foreground: oklch(0.95 0.025 88);
+
+  --gold-soft: oklch(0.82 0.12 88);
+  --glow: oklch(0.76 0.16 82 / 34%);
+  --gold-haze: oklch(0.72 0.155 86 / 24%);
 }
 
-const DIGIT_SPLIT = /(\d+)/g;
-
-/** Wraps every run of digits in its own `font-num` span so numbers get their own typeface. */
-function Num({ children }: { children: string }) {
-  const parts = children.split(DIGIT_SPLIT);
-  return (
-    <>
-      {parts.map((part, index) =>
-        index % 2 === 1 ? (
-          <span key={index} className="font-num">{part}</span>
-        ) : (
-          part
-        ),
-      )}
-    </>
-  );
+* {
+  border-color: var(--border);
 }
 
-function Index() {
-  return (
-    <main className="min-h-screen overflow-hidden bg-background text-foreground">
-      <section className="relative flex min-h-[92vh] items-center justify-center border-b border-border px-5 py-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--color-accent),transparent_58%)] opacity-50" />
-        {["top-[12%] left-[8%]", "top-[22%] right-[10%]", "bottom-[20%] left-[14%]", "bottom-[12%] right-[15%]"].map((position, index) => (
-          <Star key={position} className={`absolute ${position} animate-star-pulse text-primary`} size={index % 2 ? 13 : 18} fill="currentColor" />
-        ))}
-        <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center">
-          <div className="relative mb-7 flex h-24 w-24 items-center justify-center rounded-full border border-primary/40 bg-primary text-primary-foreground shadow-[0_0_70px_var(--glow)]">
-            <Star size={46} fill="currentColor" />
-            <span className="absolute -right-3 -top-1 rounded-full border border-primary/30 bg-background px-2 py-1 text-[10px] font-bold text-gold-soft">CoC</span>
-          </div>
-          <p className="mb-4 text-xs font-bold uppercase tracking-[0.34em] text-primary">Clash of Clans</p>
-          <h1 className="font-display text-5xl font-black leading-none sm:text-7xl lg:text-8xl">
-            <span className="text-primary">PEARL</span> STAR
-          </h1>
-          <p className="mt-5 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">
-            КВ нон-стоп, активные ЛКВ и рейды столицы. Ищем бойцов, которые играют командой.
-          </p>
-          <div className="mt-7 flex flex-wrap justify-center gap-2 text-xs text-gold-soft">
-            <span className="rounded-full border border-border bg-panel px-4 py-2 font-num text-sm font-bold tracking-[0.2em] text-primary">
-              {CLAN_TAG}
-            </span>
-            <a
-              href={LEADER_TELEGRAM_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1.5 rounded-full border border-border bg-panel px-3 py-2 transition-colors hover:border-primary/50 hover:text-primary"
-            >
-              <Send size={12} aria-hidden="true" />
-              ГЛАВА в Telegram — {LEADER_HANDLE}
-            </a>
-            <span className="rounded-full border border-border bg-panel px-3 py-2">ЛКВ — ЗОЛОТАЯ II</span>
-            <span className="rounded-full border border-border bg-panel px-3 py-2">СТОЛИЦА — СЕРЕБРЯНАЯ II</span>
-            <span className="rounded-full border border-border bg-panel px-3 py-2">НАБОР ОТ ТХ<Num>{String(MIN_TOWN_HALL)}</Num></span>
-          </div>
-          <div className="mt-8"><JoinButton /></div>
-          <a href="#details" aria-label="Перейти к информации о клане" className="mt-16 text-muted-foreground transition-colors hover:text-primary">
-            <ArrowDown className="animate-bounce" />
-          </a>
-        </div>
-      </section>
+html {
+  scroll-behavior: smooth;
+}
 
-      <section id="details" className="border-b border-border px-5 py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.26em] text-primary">О клане</p>
-            <h2 className="mt-3 text-3xl font-black sm:text-5xl">PEARL STAR в игре</h2>
-          </div>
-          <div className="grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-            <Dialog>
-              <DialogTrigger asChild>
-                <button
-                  type="button"
-                  aria-label="Открыть фото статистики клана в полном размере"
-                  className="group relative block w-full cursor-zoom-in overflow-hidden rounded-lg border border-border bg-card shadow-2xl"
-                >
-                  <img src={clanInfo.url} alt="Статистика клана PEARL STAR" className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
-                  <span className="absolute inset-0 flex items-center justify-center gap-2 bg-background/70 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
-                    <Maximize2 className="text-primary" size={18} aria-hidden="true" />
-                    <span className="text-xs font-bold uppercase tracking-[0.25em] text-primary">Открыть</span>
-                  </span>
-                </button>
-              </DialogTrigger>
-              <DialogContent className="max-w-5xl border-border bg-panel p-3 sm:p-4">
-                <DialogTitle className="sr-only">Статистика клана PEARL STAR</DialogTitle>
-                <DialogDescription className="sr-only">Фото со статистикой клана PEARL STAR в полном размере.</DialogDescription>
-                <img src={clanInfo.url} alt="Статистика клана PEARL STAR" className="max-h-[80vh] w-full rounded-md object-contain" />
-              </DialogContent>
-            </Dialog>
-            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border">
-              {[
-                [Users, "23 / 50", "участников"],
-                [Globe2, "Международный", "расположение"],
-                [Languages, "Русский", "язык чата"],
-                [Swords, "Всегда", "частота войн"],
-                [Medal, "Золотая II", "лига войн"],
-                [Trophy, "1205", "трофеев столицы"],
-              ].map(([Icon, value, label]) => {
-                const StatIcon = Icon as typeof Users;
-                return (
-                  <div key={String(label)} className="min-h-36 bg-panel p-5">
-                    <StatIcon className="mb-5 text-primary" />
-                    <p className="font-bold text-panel-foreground"><Num>{String(value)}</Num></p>
-                    <p className="mt-1 text-xs uppercase text-muted-foreground">{String(label)}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", sans-serif;
+  transition:
+    background-color 300ms ease,
+    color 300ms ease;
+}
 
-      <section className="border-b border-border px-5 py-20">
-        <div className="mx-auto max-w-6xl">
-          <p className="text-xs font-bold uppercase tracking-[0.26em] text-primary">От нас</p>
-          <h2 className="mt-3 max-w-2xl text-3xl font-black sm:text-5xl">Что мы предлагаем игрокам</h2>
-          <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-            {offers.map(({ icon: Icon, title, text }) => (
-              <article key={title} className="group min-h-48 bg-card p-7 transition-colors hover:bg-accent">
-                <Icon className="text-primary transition-transform group-hover:scale-110" size={30} />
-                <h3 className="mt-8 text-lg font-bold">{title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
 
-      <section className="border-b border-border px-5 py-20">
-        <div className="mx-auto max-w-6xl">
-          <p className="text-xs font-bold uppercase tracking-[0.26em] text-primary">От тебя</p>
-          <h2 className="mt-3 text-3xl font-black sm:text-5xl">Что ждём от бойцов</h2>
-          <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {expectations.map(({ icon: Icon, title, text }, index) => (
-              <div key={title} className="flex items-center gap-5 border-b border-border py-6">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground"><Icon /></span>
-                <div className="flex-1"><h3 className="font-bold"><Num>{title}</Num></h3><p className="mt-1 text-sm text-muted-foreground"><Num>{text}</Num></p></div>
-                <span className="font-num text-2xl font-semibold text-primary/40">0<Num>{String(index + 1)}</Num></span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
 
-      <section className="px-5 py-20">
-        <div className="mx-auto max-w-4xl rounded-lg border border-border bg-card p-8 sm:p-12">
-            <div className="flex flex-col items-center justify-center text-center">
-              <Sparkles className="text-primary" />
-              <p className="mt-6 text-xs font-bold uppercase tracking-[0.25em] text-primary">Активный набор</p>
-              <h2 className="mt-3 text-3xl font-black sm:text-5xl">Готов вступить?</h2>
-              <p className="mt-5 max-w-xl text-muted-foreground">Открытый международный клан с русским чатом. Открой профиль PEARL STAR прямо в Clash of Clans и отправь запрос на вступление.</p>
-              <a href={CLAN_JOIN_URL} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 font-num text-xl font-bold tracking-[0.2em] text-gold-soft hover:text-primary">
-                {CLAN_TAG}<ChevronRight />
-              </a>
-              <div className="mt-8"><JoinButton label="Открыть клан" /></div>
-            </div>
-        </div>
-      </section>
+.font-display {
+  font-family: "Montserrat", sans-serif;
+}
 
-      <footer className="border-t border-border px-5 py-8 text-center text-xs text-muted-foreground">
-        © <Num>2026</Num> PEARL STAR · Clash of Clans
-      </footer>
-    </main>
-  );
+.font-num {
+  font-family: "Montserrat", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.bg-panel {
+  background: var(--panel);
+}
+
+.text-panel-foreground {
+  color: var(--panel-foreground);
+}
+
+.text-gold-soft {
+  color: var(--gold-soft);
+}
+
+@keyframes star-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 10px var(--glow));
+  }
+}
+
+.animate-star-pulse {
+  animation: star-pulse 2.8s ease-in-out infinite;
+}
+
+.animate-star-pulse:nth-child(3) {
+  animation-delay: 0.7s;
+}
+
+.animate-star-pulse:nth-child(4) {
+  animation-delay: 1.4s;
+}
+
+.animate-star-pulse:nth-child(5) {
+  animation-delay: 2.1s;
+}
+
+.soft-hover {
+  box-shadow: 0 0 0 transparent;
+  transition:
+    box-shadow 250ms ease,
+    transform 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease;
+}
+
+.soft-hover:hover {
+  box-shadow: 0 0 34px var(--glow);
+  transform: translateY(-2px);
+}
+
+.theme-toggle {
+  backdrop-filter: blur(10px);
+  transition:
+    background-color 300ms ease,
+    border-color 300ms ease,
+    color 300ms ease,
+    box-shadow 300ms ease;
+}
+
+.theme-light {
+  color-scheme: light;
+}
+
+.theme-dark {
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --background: oklch(0.96 0.025 88);
+  --foreground: oklch(0.18 0.025 85);
+
+  --card: oklch(0.985 0.018 88);
+  --card-foreground: oklch(0.18 0.025 85);
+
+  --popover: oklch(0.985 0.018 88);
+  --popover-foreground: oklch(0.18 0.025 85);
+
+  --primary: oklch(0.58 0.145 82);
+  --primary-foreground: oklch(0.985 0.018 88);
+
+  --secondary: oklch(0.91 0.045 88);
+  --secondary-foreground: oklch(0.24 0.03 85);
+
+  --muted: oklch(0.92 0.035 88);
+  --muted-foreground: oklch(0.42 0.025 85);
+
+  --accent: oklch(0.90 0.055 88);
+  --accent-foreground: oklch(0.20 0.025 85);
+
+  --border: oklch(0.58 0.145 82 / 24%);
+  --input: oklch(0.58 0.145 82 / 30%);
+  --ring: oklch(0.58 0.145 82);
+
+  --panel: oklch(0.98 0.025 88 / 92%);
+  --panel-foreground: oklch(0.20 0.025 85);
+
+  --gold-soft: oklch(0.55 0.13 82);
+  --glow: oklch(0.65 0.16 82 / 28%);
+  --gold-haze: oklch(0.72 0.155 86 / 20%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-star-pulse {
+    animation: none;
+  }
+
+  .soft-hover,
+  .theme-toggle {
+    transition: none;
+  }
 }
